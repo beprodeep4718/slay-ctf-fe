@@ -11,6 +11,7 @@ export const CHAPTERS = [
   { id: "intel", label: "Field intel" },
   { id: "rules", label: "Rules" },
   { id: "sim", label: "Live fire" },
+  { id: "partners", label: "Alliances" },
   { id: "register", label: "Final strike" },
 ];
 

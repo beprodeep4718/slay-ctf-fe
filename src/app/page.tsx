@@ -8,6 +8,7 @@ import { Terminal } from "@/features/terminal/Terminal";
 import { About } from "@/sections/About";
 import { Hero } from "@/sections/Hero";
 import { Intel } from "@/sections/Intel";
+import { Partners } from "@/sections/Partners";
 import { Prizes } from "@/sections/Prizes";
 import { Register } from "@/sections/Register";
 import { Rules } from "@/sections/Rules";
@@ -29,6 +30,7 @@ export default function Home() {
         <Intel />
         <Rules />
         <Simulator />
+        <Partners />
         <Register />
       </main>
       <Footer />

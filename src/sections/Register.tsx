@@ -1,58 +1,11 @@
-import Image from "next/image";
 import { event } from "@/config/event";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { Arena } from "@/features/arena/Scenes";
 import { Breach } from "@/features/story/Breach";
 
-type Partner = { name: string; url: string; logo: string; width: number; height: number; dark?: boolean };
-
-function PartnerCard({ partner }: { partner: Partner }) {
-  return (
-    <a
-      href={partner.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`Visit ${partner.name}`}
-      className={`flex h-24 w-full items-center justify-center border border-line p-5 hover:border-ember sm:w-56 ${
-        partner.dark ? "bg-ash" : "bg-bone"
-      }`}
-    >
-      <Image
-        src={partner.logo}
-        alt={partner.name}
-        width={partner.width}
-        height={partner.height}
-        className="max-h-14 w-auto object-contain"
-      />
-    </a>
-  );
-}
-
 export function Register() {
-  const { poweredBy, supportedBy } = event.partners;
   return (
     <section id="register">
-      <div className="px-5 py-12 md:px-12">
-        <p className="font-mono text-sm text-ember">{"// BACKED BY"}</p>
-        <div className="mt-4 flex flex-wrap gap-10">
-          <div>
-            <p className="mb-3 font-mono text-sm text-smoke">Powered by</p>
-            <div className="flex flex-wrap gap-4">
-              {poweredBy.map((partner) => (
-                <PartnerCard key={partner.name} partner={partner} />
-              ))}
-            </div>
-          </div>
-          <div className="w-full sm:w-auto">
-            <p className="mb-3 font-mono text-sm text-smoke">Supported by</p>
-            <div className="flex flex-wrap gap-4">
-              {supportedBy.map((partner) => (
-                <PartnerCard key={partner.name} partner={partner} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
       <div className="relative h-[680px] overflow-hidden">
         <Arena className="absolute inset-0" />
         <div

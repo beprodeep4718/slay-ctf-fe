@@ -138,6 +138,7 @@ export const event = {
   ],
 
   partners: {
+    tagline: "Ecosystem alliances powering the tournament arena.",
     poweredBy: [{ name: "Unstop", url: "https://unstop.com", logo: "/partners/unstop.png", width: 1024, height: 407 }],
     supportedBy: [
       { name: "PortSwigger", url: "https://portswigger.net", logo: "/partners/portswigger.png", width: 738, height: 159 },
