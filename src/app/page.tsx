@@ -9,6 +9,7 @@ import { Nav } from "@/components/sections/Nav";
 import { Prizes } from "@/components/sections/Prizes";
 import { Register } from "@/components/sections/Register";
 import { Rules } from "@/components/sections/Rules";
+import { Simulator } from "@/components/sections/Simulator";
 import { StoryHud } from "@/components/sections/StoryHud";
 import { Timeline } from "@/components/sections/Timeline";
 import { Tracks } from "@/components/sections/Tracks";
@@ -27,6 +28,7 @@ export default function Home() {
         <Prizes />
         <Intel />
         <Rules />
+        <Simulator />
         <Register />
       </main>
       <Footer />

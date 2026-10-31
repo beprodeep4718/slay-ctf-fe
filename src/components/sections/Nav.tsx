@@ -3,7 +3,7 @@
 import { event } from "@/config/event";
 import { openTerminal } from "@/components/terminal/flags";
 
-const LINKS = ["tracks", "timeline", "prizes", "rules"];
+const LINKS = ["tracks", "timeline", "prizes", "rules", "sim"];
 
 export function Nav() {
   return (

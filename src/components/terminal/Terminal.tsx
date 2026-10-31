@@ -11,7 +11,7 @@ type Line = { text: string; tone?: "ember" | "smoke" };
 
 const INTRO: Line[] = [
   { text: "Field link open. Type help for orders.", tone: "ember" },
-  { text: "Three flags are hidden around this arena.", tone: "smoke" },
+  { text: "Four flags are hidden around this arena.", tone: "smoke" },
 ];
 
 const HELP = [
@@ -21,6 +21,7 @@ const HELP = [
   "register  open registration",
   "hint      where to look for flags",
   "scan      sweep the arena",
+  "play      open the breach simulator",
   "flag <x>  submit a flag",
   "clear     clear the screen",
 ];
@@ -99,8 +100,13 @@ export function Terminal() {
       window.location.href = event.registerUrl;
       setOpen(false);
       out = ["Opening registration."];
-    } else if (lower === "hint") out = ["One flag hides in the page source.", "One speaks in the browser console.", "One answers a scan, rotated."];
+    } else if (lower === "hint") out = ["One flag hides in the page source.", "One speaks in the browser console.", "One answers a scan, rotated.", "One is earned in the breach simulator."];
     else if (lower === "scan") out = [`Signal found: ${SCAN_CLUE}`];
+    else if (lower === "play") {
+      document.getElementById("sim")?.scrollIntoView();
+      setOpen(false);
+      out = ["Opening the breach simulator."];
+    }
     else if (lower.startsWith("flag ")) out = [await submitFlag(command.slice(5).trim())];
     else out = [`command not found: ${command}`];
 
