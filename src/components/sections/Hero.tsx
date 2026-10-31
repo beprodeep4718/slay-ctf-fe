@@ -21,7 +21,7 @@ export function Hero() {
           <p className="font-mono text-sm text-ember">
             {"// "}{event.level.toUpperCase()} · {event.mode.toUpperCase()} BATTLEGROUND
           </p>
-          <p className="max-w-[540px] text-base leading-normal md:text-xl">
+          <p className="max-w-[540px] text-sm leading-relaxed md:text-base">
             Teams enter the arena. One holds the core. Hosted at {event.host}.
           </p>
           <a

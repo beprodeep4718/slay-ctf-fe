@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Big_Shoulders, Inter, JetBrains_Mono } from "next/font/google";
+import { Big_Shoulders, JetBrains_Mono } from "next/font/google";
 import { event } from "@/config/event";
 import "./globals.css";
 
@@ -7,11 +7,6 @@ const bigShoulders = Big_Shoulders({
   variable: "--font-big-shoulders",
   subsets: ["latin"],
   weight: ["700", "900"],
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
 });
 
 const jetbrains = JetBrains_Mono({
@@ -30,7 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${bigShoulders.variable} ${inter.variable} ${jetbrains.variable} antialiased`}
+      className={`${bigShoulders.variable} ${jetbrains.variable} antialiased`}
     >
       <body>{children}</body>
     </html>

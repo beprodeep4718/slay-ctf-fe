@@ -63,8 +63,8 @@ export function BootSequence() {
             ))}
           </div>
           <div className="flex items-end justify-between gap-6">
-            <div className="flex-1">
-              <p className="font-display text-7xl leading-none font-black text-blood md:text-9xl">
+            <div className="min-w-0 flex-1">
+              <p className="font-display text-6xl leading-none font-black text-blood md:text-9xl">
                 DEPLOYING
               </p>
               <div className="mt-4 h-2.5 border border-line bg-ash">
