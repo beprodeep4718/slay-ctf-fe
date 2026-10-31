@@ -1,6 +1,11 @@
+"use client";
+
+import { useRef } from "react";
+import { gsap } from "gsap";
 import { event } from "@/config/event";
 import { ScrambleText } from "@/components/fx/ScrambleText";
-import { Heading, Reveal } from "./Section";
+import { useScrollScene, type Layout } from "@/components/fx/useScrollScene";
+import { Heading } from "./Section";
 
 const STATS = [
   { label: "LEVEL", value: event.level },
@@ -9,27 +14,50 @@ const STATS = [
   { label: "DATE", value: event.dateLabel },
 ];
 
+const BRIEFING = `${event.name} is a national level Capture The Flag competition held on site at ${event.host}. Teams from across the country fight through security challenges in one room, for one title.`;
+
+// The briefing lights up word by word, then the mission facts lock in.
+function buildAbout(root: HTMLElement, { wide }: Layout) {
+  gsap
+    .timeline({
+      defaults: { ease: "none" },
+      scrollTrigger: wide
+        ? { trigger: root, start: "top top", end: "+=140%", pin: true, scrub: 0.5 }
+        : { trigger: root, start: "top 70%", end: "bottom 80%", scrub: 0.5 },
+    })
+    .fromTo("[data-word]", { opacity: 0.14 }, { opacity: 1, stagger: 0.1, duration: 0.3 })
+    .fromTo("[data-stat]", { y: 40, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.25, duration: 0.8 });
+}
+
 export function About() {
+  const root = useRef<HTMLElement>(null);
+  useScrollScene(root, buildAbout);
+
   return (
-    <section id="about" className="px-5 py-24 md:px-12 md:py-32">
+    <section
+      ref={root}
+      id="about"
+      className="flex flex-col justify-center px-5 py-24 md:px-12 md:py-32 lg:min-h-svh lg:py-24"
+    >
       <Heading kicker="01 THE MISSION">
         One arena. <span className="text-blood">One core.</span>
       </Heading>
-      <Reveal>
-        <p className="mt-8 max-w-3xl text-lg leading-relaxed md:text-2xl">
-          {event.name} is a national level Capture The Flag competition held on site at {event.host}.
-          Teams from across the country fight through security challenges in one room, for one title.
-        </p>
-      </Reveal>
+      <p className="mt-8 max-w-4xl text-lg leading-relaxed md:text-2xl">
+        {BRIEFING.split(" ").map((word, i) => (
+          <span key={i} data-word>
+            {word}{" "}
+          </span>
+        ))}
+      </p>
       <div className="mt-14 grid grid-cols-2 gap-4 md:grid-cols-4">
-        {STATS.map((stat, i) => (
-          <Reveal key={stat.label} delay={i * 0.06} className="border border-line bg-ash p-5">
+        {STATS.map((stat) => (
+          <div key={stat.label} data-stat className="border border-line bg-ash p-5">
             <p className="font-mono text-sm text-ember">{stat.label}</p>
             <ScrambleText
               text={stat.value}
               className="mt-3 block font-display text-3xl font-black uppercase md:text-4xl"
             />
-          </Reveal>
+          </div>
         ))}
       </div>
     </section>

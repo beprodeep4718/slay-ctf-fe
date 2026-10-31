@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Matches WIDE in useScrollScene: layouts that only work while a section is pinned. */
+@custom-variant pinned (@media (min-width: 1024px) and (min-height: 700px) and (prefers-reduced-motion: no-preference));
+
 @theme {
   --color-void: #0a0506;
   --color-ash: #160b0d;

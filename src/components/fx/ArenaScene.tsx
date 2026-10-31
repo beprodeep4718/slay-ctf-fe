@@ -5,6 +5,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import * as THREE from "three";
 import type { StageInfo } from "./Stage";
+import { STRIKE_EVENT, story } from "./story";
 
 const SIZE = 0.6;
 const CORE_Y = 3.35;
@@ -404,8 +405,9 @@ function Embers({ count }: { count: number }) {
   );
 }
 
-function Rig({ battle, still }: { battle: Battle; still: boolean }) {
+function Rig({ battle, still, dive }: { battle: Battle; still: boolean; dive: boolean }) {
   const pointer = useRef({ x: 0, y: 0 });
+  const closeIn = useRef(0);
   const next = useRef(1);
 
   useEffect(() => {
@@ -418,11 +420,16 @@ function Rig({ battle, still }: { battle: Battle; still: boolean }) {
       fire(battle);
       fire(battle);
     };
+    const strike = (e: Event) => {
+      for (let i = 0; i < (e as CustomEvent<number>).detail; i++) fire(battle);
+    };
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerdown", down);
+    window.addEventListener(STRIKE_EVENT, strike);
     return () => {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerdown", down);
+      window.removeEventListener(STRIKE_EVENT, strike);
     };
   }, [battle]);
 
@@ -443,9 +450,13 @@ function Rig({ battle, still }: { battle: Battle; still: boolean }) {
     }
     // Portrait screens pull back and aim low, so the core clears the copy below it.
     const portrait = size.width < size.height;
-    const distance = portrait ? 25 : 14;
-    camera.position.set(Math.sin(yaw.current) * distance, height.current, Math.cos(yaw.current) * distance);
-    camera.lookAt(0, portrait ? -2.2 : 2.6, 0);
+    // Scrolling the hero pushes the camera in on the core.
+    closeIn.current += ((dive ? story.dive : 0) - closeIn.current) * 0.12;
+    const lerp = THREE.MathUtils.lerp;
+    const distance = lerp(portrait ? 25 : 14, portrait ? 15 : 6.8, closeIn.current);
+    const rise = lerp(height.current, CORE_Y + 0.4, closeIn.current);
+    camera.position.set(Math.sin(yaw.current) * distance, rise, Math.cos(yaw.current) * distance);
+    camera.lookAt(0, lerp(portrait ? -2.2 : 2.6, CORE_Y, closeIn.current), 0);
 
     advance(battle, dt);
   });
@@ -453,7 +464,7 @@ function Rig({ battle, still }: { battle: Battle; still: boolean }) {
   return null;
 }
 
-export default function ArenaScene({ running, still, lite }: StageInfo) {
+export default function ArenaScene({ running, still, lite, dive }: StageInfo & { dive: boolean }) {
   const battle = useMemo<Battle>(() => ({ strikes: [], waves: [] }), []);
 
   return (
@@ -464,7 +475,7 @@ export default function ArenaScene({ running, still, lite }: StageInfo) {
       gl={{ alpha: true, antialias: !lite, powerPreference: "high-performance" }}
       style={{ pointerEvents: "none" }}
     >
-      <Rig battle={battle} still={still} />
+      <Rig battle={battle} still={still} dive={dive} />
       <ambientLight intensity={0.45} color="#ffb0a0" />
       <directionalLight position={[-5, 9, 6]} intensity={2.4} color="#ffd6cc" />
       <directionalLight position={[6, 4, -8]} intensity={2.2} color="#ff4b3e" />
