@@ -1,5 +1,5 @@
 import { event } from "@/config/event";
-import { Heading } from "./Section";
+import { Heading } from "@/components/ui/Section";
 
 export function Rules() {
   return (

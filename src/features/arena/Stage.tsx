@@ -36,15 +36,21 @@ export function Stage({
         lite: window.innerWidth < 768 || (navigator.hardwareConcurrency ?? 8) <= 4,
       }),
     );
-    const observer = new IntersectionObserver(
-      ([entry]) =>
-        setState((s) => ({ near: s.near || entry.isIntersecting, running: entry.isIntersecting })),
+    // Scenes mount a full screen early, so their startup hitch happens out of view.
+    const nearby = new IntersectionObserver(
+      ([entry]) => setState((s) => (s.near || !entry.isIntersecting ? s : { ...s, near: true })),
+      { rootMargin: "100% 0px" },
+    );
+    const visible = new IntersectionObserver(
+      ([entry]) => setState((s) => ({ ...s, running: entry.isIntersecting })),
       { rootMargin: "200px" },
     );
-    observer.observe(el);
+    nearby.observe(el);
+    visible.observe(el);
     return () => {
       cancelAnimationFrame(frame);
-      observer.disconnect();
+      nearby.disconnect();
+      visible.disconnect();
     };
   }, []);
 

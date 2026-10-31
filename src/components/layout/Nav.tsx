@@ -1,7 +1,7 @@
 "use client";
 
 import { event } from "@/config/event";
-import { openTerminal } from "@/components/terminal/flags";
+import { openTerminal } from "@/features/terminal/flags";
 
 const LINKS = ["tracks", "timeline", "prizes", "rules", "sim"];
 
@@ -9,7 +9,7 @@ export function Nav() {
   return (
     <nav
       aria-label="Main"
-      className="fixed inset-x-0 top-0 z-30 flex h-20 items-center justify-between bg-void/60 px-5 font-mono text-sm backdrop-blur-sm md:px-12"
+      className="fixed inset-x-0 top-0 z-30 flex h-20 items-center justify-between bg-void/85 px-5 font-mono text-sm md:px-12"
     >
       <a href="#top" className="font-display text-3xl font-black tracking-wide">
         SLAY<span className="text-ember">_</span>CTF

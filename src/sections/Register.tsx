@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { event } from "@/config/event";
-import { Magnetic } from "@/components/fx/Magnetic";
-import { Arena } from "@/components/fx/Scenes";
-import { Breach } from "./Breach";
+import { Magnetic } from "@/components/motion/Magnetic";
+import { Arena } from "@/features/arena/Scenes";
+import { Breach } from "@/features/story/Breach";
 
 type Partner = { name: string; url: string; logo: string; width: number; height: number; dark?: boolean };
 

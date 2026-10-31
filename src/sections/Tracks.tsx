@@ -3,11 +3,11 @@
 import { useCallback, useRef, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { event } from "@/config/event";
-import { ScrambleText } from "@/components/fx/ScrambleText";
-import { Weapon } from "@/components/fx/Scenes";
-import { armWeapon, useStory } from "@/components/fx/story";
-import { useScrollScene, type Layout } from "@/components/fx/useScrollScene";
-import { Heading } from "./Section";
+import { ScrambleText } from "@/components/motion/ScrambleText";
+import { Weapon } from "@/features/arena/Scenes";
+import { armWeapon, useStory } from "@/features/story/story";
+import { useScrollScene, type Layout } from "@/features/story/useScrollScene";
+import { Heading } from "@/components/ui/Section";
 
 const COUNT = event.tracks.length;
 

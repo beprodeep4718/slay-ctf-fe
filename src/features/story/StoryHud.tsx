@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { CHAPTERS, useStory } from "@/components/fx/story";
+import { CHAPTERS, useStory } from "./story";
 
 // The story's thread: scrolling is the attack, so core integrity falls with progress.
 export function StoryHud() {
@@ -26,7 +26,18 @@ export function StoryHud() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    const sections = CHAPTERS.map(({ id }) => document.getElementById(id));
+    // Measured once per layout refresh, so scrolling never forces a layout read.
+    let tops: number[] = [];
+    let shownPercent = -1;
+    const measure = () => {
+      tops = CHAPTERS.map(({ id }) => {
+        const section = document.getElementById(id);
+        const box = (section?.closest(".pin-spacer") ?? section)?.getBoundingClientRect();
+        return box ? box.top + window.scrollY : Infinity;
+      });
+    };
+    ScrollTrigger.addEventListener("refresh", measure);
+    measure();
 
     const trigger = ScrollTrigger.create({
       start: 0,
@@ -35,20 +46,24 @@ export function StoryHud() {
         if (!breachedRef.current) {
           // Scrolling alone never finishes the core; the last strike is the visitor's.
           const integrity = 1 - self.progress * 0.92;
-          if (label.current) label.current.textContent = `${Math.round(integrity * 100)}%`;
+          const percent = Math.round(integrity * 100);
+          if (percent !== shownPercent && label.current) {
+            shownPercent = percent;
+            label.current.textContent = `${percent}%`;
+          }
           if (railBar.current) railBar.current.style.transform = `scaleY(${integrity})`;
           if (topBar.current) topBar.current.style.transform = `scaleX(${integrity})`;
         }
-        const middle = window.innerHeight / 2;
-        let index = 0;
-        sections.forEach((section, i) => {
-          if (section && section.getBoundingClientRect().top <= middle) index = i;
-        });
-        setChapter(index);
-        setVisible(self.scroll() > window.innerHeight * 0.25);
+        const scroll = self.scroll();
+        const middle = scroll + window.innerHeight / 2;
+        setChapter(Math.max(0, tops.filter((top) => top <= middle).length - 1));
+        setVisible(scroll > window.innerHeight * 0.25);
       },
     });
-    return () => trigger.kill();
+    return () => {
+      ScrollTrigger.removeEventListener("refresh", measure);
+      trigger.kill();
+    };
   }, []);
 
   return (

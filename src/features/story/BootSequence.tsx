@@ -49,7 +49,7 @@ export function BootSequence() {
           id="boot"
           exit={{ y: "-100%" }}
           transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
-          className="fixed inset-0 z-50 flex flex-col justify-between bg-void/80 p-6 font-mono text-sm leading-8 backdrop-blur-sm md:p-10"
+          className="fixed inset-0 z-50 flex flex-col justify-between bg-void/90 p-6 font-mono text-sm leading-8 md:p-10"
         >
           <noscript>
             <style>{`#boot{display:none}`}</style>

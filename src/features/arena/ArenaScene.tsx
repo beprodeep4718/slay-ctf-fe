@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import * as THREE from "three";
+import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import type { StageInfo } from "./Stage";
-import { STRIKE_EVENT, story } from "./story";
+import { STRIKE_EVENT, story } from "@/features/story/story";
 
 const SIZE = 0.6;
 const CORE_Y = 3.35;
@@ -34,9 +35,11 @@ function advance(battle: Battle, dt: number) {
   battle.waves = battle.waves.filter((w) => (w.radius += 5.6 * dt) < 9);
 }
 
-function Terrain({ battle, rings }: { battle: Battle; rings: number }) {
+function Terrain({ battle, lite }: { battle: Battle; lite: boolean }) {
+  const rings = lite ? 6 : 8;
   const mesh = useRef<THREE.InstancedMesh>(null);
   const caps = useRef<THREE.InstancedMesh>(null);
+  const frame = useRef(0);
   const tiles = useMemo(() => {
     const list: { x: number; z: number; dist: number; base: number }[] = [];
     for (let q = -rings; q <= rings; q++) {
@@ -68,6 +71,9 @@ function Terrain({ battle, rings }: { battle: Battle; rings: number }) {
   useFrame(({ clock }) => {
     const m = mesh.current;
     if (!m) return;
+    // Lighter devices update the terrain every other frame.
+    frame.current++;
+    if (lite && frame.current % 2 === 0) return;
     const t = clock.elapsedTime;
     tiles.forEach((tile, i) => {
       let height = 1.6 + tile.base + Math.sin(tile.dist / 0.9 - t * 1.4) * 0.1;
@@ -107,11 +113,11 @@ function Terrain({ battle, rings }: { battle: Battle; rings: number }) {
     <group key={tiles.length}>
       <instancedMesh ref={mesh} args={[undefined, undefined, tiles.length]} frustumCulled={false}>
         <cylinderGeometry args={[SIZE * 0.95, SIZE * 0.95, 1, 6]} />
-        <meshStandardMaterial flatShading metalness={0.15} roughness={0.5} />
+        <meshLambertMaterial flatShading />
       </instancedMesh>
       <instancedMesh ref={caps} args={[undefined, undefined, tiles.length]} frustumCulled={false}>
         <cylinderGeometry args={[SIZE * 0.95, SIZE * 0.95, 1, 6]} />
-        <meshStandardMaterial flatShading metalness={0.3} roughness={0.35} />
+        <meshLambertMaterial flatShading />
       </instancedMesh>
     </group>
   );
@@ -186,11 +192,13 @@ function Socket() {
 }
 
 // A closed cross-section, so each lathe sweep becomes a thick armour plate.
-function plateGeometry(outer: [number, number][]) {
+function armourTier(outer: [number, number][]) {
   const inner = [...outer].reverse().map(([r, y]) => new THREE.Vector2(Math.max(r - 0.14, 0.02), y));
   const points = [...outer.map(([r, y]) => new THREE.Vector2(r, y)), ...inner];
   points.push(points[0].clone());
-  return new THREE.LatheGeometry(points, 3, -Math.PI / 8 + 0.05, Math.PI / 4 - 0.1);
+  const plate = new THREE.LatheGeometry(points, 3, -Math.PI / 8 + 0.05, Math.PI / 4 - 0.1);
+  const plates = Array.from({ length: 8 }, (_, i) => plate.clone().rotateY((i * Math.PI) / 4));
+  return mergeGeometries(plates) ?? plate;
 }
 
 function Ring({ radius, tilt, speed }: { radius: number; tilt: [number, number, number]; speed: number }) {
@@ -238,20 +246,26 @@ function Ring({ radius, tilt, speed }: { radius: number; tilt: [number, number, 
 function Debris({ count }: { count: number }) {
   const mesh = useRef<THREE.InstancedMesh>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
+  const shards = useMemo(
+    () =>
+      Array.from({ length: count }, (_, i) => ({
+        radius: 1.9 + THREE.MathUtils.seededRandom(i + 7) * 2.3,
+        angle: THREE.MathUtils.seededRandom(i + 70) * Math.PI * 2,
+        height: (THREE.MathUtils.seededRandom(i + 170) - 0.5) * 3.4,
+        size: 0.03 + THREE.MathUtils.seededRandom(i + 270) * 0.1,
+      })),
+    [count],
+  );
 
   useFrame(({ clock }) => {
     if (!mesh.current) return;
     const t = clock.elapsedTime;
     for (let i = 0; i < count; i++) {
-      const r = 1.9 + THREE.MathUtils.seededRandom(i + 7) * 2.3;
-      const angle = THREE.MathUtils.seededRandom(i + 70) * Math.PI * 2 + t * (0.5 / r);
-      dummy.position.set(
-        Math.cos(angle) * r,
-        (THREE.MathUtils.seededRandom(i + 170) - 0.5) * 3.4 + Math.sin(t + i) * 0.08,
-        Math.sin(angle) * r,
-      );
+      const { radius, angle: start, height, size } = shards[i];
+      const angle = start + t * (0.5 / radius);
+      dummy.position.set(Math.cos(angle) * radius, height + Math.sin(t + i) * 0.08, Math.sin(angle) * radius);
       dummy.rotation.set(t * 0.6 + i, t * 0.4 + i, 0);
-      dummy.scale.setScalar(0.03 + THREE.MathUtils.seededRandom(i + 270) * 0.1);
+      dummy.scale.setScalar(size);
       dummy.updateMatrix();
       mesh.current.setMatrixAt(i, dummy.matrix);
     }
@@ -261,7 +275,7 @@ function Debris({ count }: { count: number }) {
   return (
     <instancedMesh ref={mesh} args={[undefined, undefined, count]} frustumCulled={false}>
       <tetrahedronGeometry args={[1]} />
-      <meshStandardMaterial flatShading color="#c4241c" metalness={0.4} roughness={0.35} />
+      <meshLambertMaterial flatShading color="#c4241c" />
     </instancedMesh>
   );
 }
@@ -272,11 +286,11 @@ function Core({ battle }: { battle: Battle }) {
   const plate = useRef<THREE.MeshStandardMaterial>(null);
   const open = useRef(0);
   const upper = useMemo(
-    () => plateGeometry([[0.98, 0.34], [1.08, 0.6], [0.66, 1.5], [0.08, 2.4]]),
+    () => armourTier([[0.98, 0.34], [1.08, 0.6], [0.66, 1.5], [0.08, 2.4]]),
     [],
   );
   const lower = useMemo(
-    () => plateGeometry([[0.08, -1.95], [0.62, -1.05], [1.08, -0.34], [0.98, -0.08]]),
+    () => armourTier([[0.08, -1.95], [0.62, -1.05], [1.08, -0.34], [0.98, -0.08]]),
     [],
   );
 
@@ -292,7 +306,7 @@ function Core({ battle }: { battle: Battle }) {
       heart.current.rotation.x += dt * 0.7;
       heart.current.scale.setScalar(1 + open.current * 0.3);
     }
-    if (plate.current) plate.current.emissiveIntensity = 0.28 + open.current * 1.6;
+    if (plate.current) plate.current.emissiveIntensity = 0.28 + open.current * 0.8;
   });
 
   return (
@@ -306,33 +320,29 @@ function Core({ battle }: { battle: Battle }) {
         <meshBasicMaterial color={[5, 0.4, 0.25]} toneMapped={false} />
       </mesh>
       <group ref={armour}>
-        {Array.from({ length: 8 }, (_, i) => (
-          <group key={i} rotation={[0, (i * Math.PI) / 4, 0]}>
-            <mesh geometry={upper}>
-              <meshStandardMaterial
-                ref={i === 0 ? plate : undefined}
-                flatShading
-                side={THREE.DoubleSide}
-                color="#c8180f"
-                emissive="#e10600"
-                emissiveIntensity={0.28}
-                metalness={0.4}
-                roughness={0.3}
-              />
-            </mesh>
-            <mesh geometry={lower}>
-              <meshStandardMaterial
-                flatShading
-                side={THREE.DoubleSide}
-                color="#8f1410"
-                emissive="#e10600"
-                emissiveIntensity={0.2}
-                metalness={0.4}
-                roughness={0.34}
-              />
-            </mesh>
-          </group>
-        ))}
+        <mesh geometry={upper}>
+          <meshStandardMaterial
+            ref={plate}
+            flatShading
+            side={THREE.DoubleSide}
+            color="#c8180f"
+            emissive="#e10600"
+            emissiveIntensity={0.28}
+            metalness={0.4}
+            roughness={0.3}
+          />
+        </mesh>
+        <mesh geometry={lower}>
+          <meshStandardMaterial
+            flatShading
+            side={THREE.DoubleSide}
+            color="#8f1410"
+            emissive="#e10600"
+            emissiveIntensity={0.2}
+            metalness={0.4}
+            roughness={0.34}
+          />
+        </mesh>
       </group>
       <Ring radius={2.2} tilt={[1.2, 0.2, 0]} speed={0.9} />
       <Ring radius={2.7} tilt={[-0.5, 1.1, 0]} speed={-0.6} />
@@ -464,15 +474,51 @@ function Rig({ battle, still, dive }: { battle: Battle; still: boolean; dive: bo
   return null;
 }
 
+const LOW_FPS = 42;
+const MIN_DPR = 0.6;
+
+// Steps quality down on machines that cannot hold the frame rate: bloom first, then resolution.
+function AdaptiveQuality({ onDropBloom }: { onDropBloom: () => void }) {
+  const setDpr = useThree((state) => state.setDpr);
+  const dpr = useThree((state) => state.viewport.dpr);
+  const sample = useRef({ frames: 0, time: 0, warmedUp: false, bloomDropped: false, dpr });
+
+  useFrame((_, delta) => {
+    const s = sample.current;
+    // Long gaps mean the scene was paused off screen, not that the machine is slow.
+    if (delta > 0.25) return;
+    s.frames++;
+    s.time += delta;
+    if (s.time < 1.5) return;
+    const fps = s.frames / s.time;
+    s.frames = 0;
+    s.time = 0;
+    if (!s.warmedUp) {
+      s.warmedUp = true;
+    } else if (fps < LOW_FPS) {
+      if (!s.bloomDropped) {
+        s.bloomDropped = true;
+        onDropBloom();
+      } else if (s.dpr > MIN_DPR) {
+        s.dpr = Math.max(MIN_DPR, s.dpr - 0.2);
+        setDpr(s.dpr);
+      }
+    }
+  });
+
+  return null;
+}
+
 export default function ArenaScene({ running, still, lite, dive }: StageInfo & { dive: boolean }) {
   const battle = useMemo<Battle>(() => ({ strikes: [], waves: [] }), []);
+  const [bloom, setBloom] = useState(!lite);
 
   return (
     <Canvas
       frameloop={still ? "demand" : running ? "always" : "never"}
       dpr={lite ? 1 : [1, 1.5]}
       camera={{ fov: 36, position: [5, 5, 13] }}
-      gl={{ alpha: true, antialias: !lite, powerPreference: "high-performance" }}
+      gl={{ alpha: true, antialias: false, stencil: false, powerPreference: "high-performance" }}
       style={{ pointerEvents: "none" }}
     >
       <Rig battle={battle} still={still} dive={dive} />
@@ -480,16 +526,17 @@ export default function ArenaScene({ running, still, lite, dive }: StageInfo & {
       <directionalLight position={[-5, 9, 6]} intensity={2.4} color="#ffd6cc" />
       <directionalLight position={[6, 4, -8]} intensity={2.2} color="#ff4b3e" />
       <pointLight position={[0, CORE_Y, 0]} intensity={70} distance={13} color="#e10600" />
-      <Terrain battle={battle} rings={lite ? 6 : 8} />
+      <Terrain battle={battle} lite={lite} />
       <Towers />
       <Socket />
       <Core battle={battle} />
       <Debris count={lite ? 36 : 90} />
       <Beams battle={battle} />
       <Embers count={lite ? 40 : 110} />
-      {!lite && (
-        <EffectComposer>
-          <Bloom intensity={0.9} luminanceThreshold={0.9} luminanceSmoothing={0.2} mipmapBlur />
+      {!still && <AdaptiveQuality onDropBloom={() => setBloom(false)} />}
+      {bloom && (
+        <EffectComposer multisampling={0}>
+          <Bloom intensity={0.9} luminanceThreshold={0.9} luminanceSmoothing={0.2} mipmapBlur levels={5} />
         </EffectComposer>
       )}
     </Canvas>

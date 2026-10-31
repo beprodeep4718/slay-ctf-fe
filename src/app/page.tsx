@@ -1,19 +1,19 @@
-import { BootSequence } from "@/components/fx/BootSequence";
-import { Cursor } from "@/components/fx/Cursor";
-import { SmoothScroll } from "@/components/fx/SmoothScroll";
-import { About } from "@/components/sections/About";
-import { Footer } from "@/components/sections/Footer";
-import { Hero } from "@/components/sections/Hero";
-import { Intel } from "@/components/sections/Intel";
-import { Nav } from "@/components/sections/Nav";
-import { Prizes } from "@/components/sections/Prizes";
-import { Register } from "@/components/sections/Register";
-import { Rules } from "@/components/sections/Rules";
-import { Simulator } from "@/components/sections/Simulator";
-import { StoryHud } from "@/components/sections/StoryHud";
-import { Timeline } from "@/components/sections/Timeline";
-import { Tracks } from "@/components/sections/Tracks";
-import { Terminal } from "@/components/terminal/Terminal";
+import { Footer } from "@/components/layout/Footer";
+import { Nav } from "@/components/layout/Nav";
+import { Cursor } from "@/components/motion/Cursor";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
+import { BootSequence } from "@/features/story/BootSequence";
+import { StoryHud } from "@/features/story/StoryHud";
+import { Terminal } from "@/features/terminal/Terminal";
+import { About } from "@/sections/About";
+import { Hero } from "@/sections/Hero";
+import { Intel } from "@/sections/Intel";
+import { Prizes } from "@/sections/Prizes";
+import { Register } from "@/sections/Register";
+import { Rules } from "@/sections/Rules";
+import { Simulator } from "@/sections/Simulator";
+import { Timeline } from "@/sections/Timeline";
+import { Tracks } from "@/sections/Tracks";
 
 export default function Home() {
   return (

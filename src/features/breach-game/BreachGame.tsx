@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { strikeCore } from "@/components/fx/story";
-import { openTerminal } from "@/components/terminal/flags";
+import { strikeCore } from "@/features/story/story";
+import { openTerminal } from "@/features/terminal/flags";
 import {
   GRID_SIZE,
   LEVEL_COUNT,

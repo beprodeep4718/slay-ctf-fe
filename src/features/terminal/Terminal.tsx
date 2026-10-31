@@ -128,7 +128,7 @@ export function Terminal() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 24 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-x-4 top-24 bottom-8 z-50 mx-auto flex max-w-3xl flex-col border border-blood bg-ash/95 font-mono backdrop-blur-sm"
+          className="fixed inset-x-4 top-24 bottom-8 z-50 mx-auto flex max-w-3xl flex-col border border-blood bg-ash font-mono"
           data-lenis-prevent
         >
           <div className="flex h-11 shrink-0 items-center justify-between border-b border-line pl-4 text-sm">

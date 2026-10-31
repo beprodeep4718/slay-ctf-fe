@@ -3,9 +3,9 @@
 import { useRef } from "react";
 import { gsap } from "gsap";
 import { event } from "@/config/event";
-import { Weapon } from "@/components/fx/Scenes";
-import { useScrollScene, type Layout } from "@/components/fx/useScrollScene";
-import { Heading } from "./Section";
+import { Weapon } from "@/features/arena/Scenes";
+import { useScrollScene, type Layout } from "@/features/story/useScrollScene";
+import { Heading } from "@/components/ui/Section";
 
 // Each perk unlocks in turn as the visitor scrolls past the relic.
 function buildPrizes(root: HTMLElement, { wide }: Layout) {

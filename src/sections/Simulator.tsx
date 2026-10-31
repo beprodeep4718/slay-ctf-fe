@@ -1,5 +1,5 @@
-import { BreachGame } from "@/components/game/BreachGame";
-import { Heading } from "./Section";
+import { BreachGame } from "@/features/breach-game/BreachGame";
+import { Heading } from "@/components/ui/Section";
 
 export function Simulator() {
   return (

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { event } from "@/config/event";
-import { breachCore, useStory } from "@/components/fx/story";
+import { breachCore, useStory } from "./story";
 
 const HOLD_SECONDS = 1.6;
 

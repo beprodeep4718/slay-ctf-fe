@@ -4,10 +4,10 @@ import { useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { event } from "@/config/event";
-import { Magnetic } from "@/components/fx/Magnetic";
-import { Arena } from "@/components/fx/Scenes";
-import { story } from "@/components/fx/story";
-import { useScrollScene, type Layout } from "@/components/fx/useScrollScene";
+import { Magnetic } from "@/components/motion/Magnetic";
+import { Arena } from "@/features/arena/Scenes";
+import { story } from "@/features/story/story";
+import { useScrollScene, type Layout } from "@/features/story/useScrollScene";
 import { Countdown } from "./Countdown";
 
 const TICKER = [event.dateLabel, `${event.duration} sprint`.toUpperCase(), `${event.format} ${event.mode}`.toUpperCase(), `TEAMS: ${event.teamSize}`.toUpperCase(), `FLAG: ${event.flagFormat}`];

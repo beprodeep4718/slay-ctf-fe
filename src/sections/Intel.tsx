@@ -1,5 +1,5 @@
 import { event } from "@/config/event";
-import { Heading, Reveal } from "./Section";
+import { Heading, Reveal } from "@/components/ui/Section";
 
 export function Intel() {
   return (

@@ -3,9 +3,9 @@
 import { useRef } from "react";
 import { gsap } from "gsap";
 import { event } from "@/config/event";
-import { ScrambleText } from "@/components/fx/ScrambleText";
-import { useScrollScene, type Layout } from "@/components/fx/useScrollScene";
-import { Heading } from "./Section";
+import { ScrambleText } from "@/components/motion/ScrambleText";
+import { useScrollScene, type Layout } from "@/features/story/useScrollScene";
+import { Heading } from "@/components/ui/Section";
 
 const STATS = [
   { label: "FORMAT", value: event.format },

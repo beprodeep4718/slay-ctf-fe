@@ -3,8 +3,8 @@
 import { useRef } from "react";
 import { gsap } from "gsap";
 import { event } from "@/config/event";
-import { useScrollScene, type Layout } from "@/components/fx/useScrollScene";
-import { Heading } from "./Section";
+import { useScrollScene, type Layout } from "@/features/story/useScrollScene";
+import { Heading } from "@/components/ui/Section";
 
 // Wide screens travel sideways through the phases; the path line tracks progress.
 function buildTimeline(root: HTMLElement, { wide }: Layout) {
