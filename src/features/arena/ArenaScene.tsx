@@ -458,15 +458,15 @@ function Rig({ battle, still, dive }: { battle: Battle; still: boolean; dive: bo
         next.current = 0.6 + Math.random() * 1.1;
       }
     }
-    // Portrait screens pull back and aim low, so the core clears the copy below it.
+    // Portrait screens pull back and look down, so the core sits between the title and the copy.
     const portrait = size.width < size.height;
     // Scrolling the hero pushes the camera in on the core.
     closeIn.current += ((dive ? story.dive : 0) - closeIn.current) * 0.12;
     const lerp = THREE.MathUtils.lerp;
-    const distance = lerp(portrait ? 25 : 14, portrait ? 15 : 6.8, closeIn.current);
-    const rise = lerp(height.current, CORE_Y + 0.4, closeIn.current);
+    const distance = lerp(portrait ? 30 : 14, portrait ? 15 : 6.8, closeIn.current);
+    const rise = lerp(height.current + (portrait ? 4 : 0), CORE_Y + 0.4, closeIn.current);
     camera.position.set(Math.sin(yaw.current) * distance, rise, Math.cos(yaw.current) * distance);
-    camera.lookAt(0, lerp(portrait ? -2.2 : 2.6, CORE_Y, closeIn.current), 0);
+    camera.lookAt(0, lerp(portrait ? 2.2 : 2.6, CORE_Y, closeIn.current), 0);
 
     advance(battle, dt);
   });
@@ -478,10 +478,10 @@ const LOW_FPS = 42;
 const MIN_DPR = 0.6;
 
 // Steps quality down on machines that cannot hold the frame rate: bloom first, then resolution.
-function AdaptiveQuality({ onDropBloom }: { onDropBloom: () => void }) {
+function AdaptiveQuality({ bloom, onDropBloom }: { bloom: boolean; onDropBloom: () => void }) {
   const setDpr = useThree((state) => state.setDpr);
   const dpr = useThree((state) => state.viewport.dpr);
-  const sample = useRef({ frames: 0, time: 0, warmedUp: false, bloomDropped: false, dpr });
+  const sample = useRef({ frames: 0, time: 0, warmedUp: false, dpr });
 
   useFrame((_, delta) => {
     const s = sample.current;
@@ -496,8 +496,7 @@ function AdaptiveQuality({ onDropBloom }: { onDropBloom: () => void }) {
     if (!s.warmedUp) {
       s.warmedUp = true;
     } else if (fps < LOW_FPS) {
-      if (!s.bloomDropped) {
-        s.bloomDropped = true;
+      if (bloom) {
         onDropBloom();
       } else if (s.dpr > MIN_DPR) {
         s.dpr = Math.max(MIN_DPR, s.dpr - 0.2);
@@ -516,7 +515,7 @@ export default function ArenaScene({ running, still, lite, dive }: StageInfo & {
   return (
     <Canvas
       frameloop={still ? "demand" : running ? "always" : "never"}
-      dpr={lite ? 1 : [1, 1.5]}
+      dpr={lite ? [1, 1.25] : [1, 1.5]}
       camera={{ fov: 36, position: [5, 5, 13] }}
       gl={{ alpha: true, antialias: false, stencil: false, powerPreference: "high-performance" }}
       style={{ pointerEvents: "none" }}
@@ -533,7 +532,7 @@ export default function ArenaScene({ running, still, lite, dive }: StageInfo & {
       <Debris count={lite ? 36 : 90} />
       <Beams battle={battle} />
       <Embers count={lite ? 40 : 110} />
-      {!still && <AdaptiveQuality onDropBloom={() => setBloom(false)} />}
+      {!still && <AdaptiveQuality bloom={bloom} onDropBloom={() => setBloom(false)} />}
       {bloom && (
         <EffectComposer multisampling={0}>
           <Bloom intensity={0.9} luminanceThreshold={0.9} luminanceSmoothing={0.2} mipmapBlur levels={5} />

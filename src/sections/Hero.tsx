@@ -52,10 +52,10 @@ export function Hero() {
   useScrollScene(root, buildHero);
 
   return (
-    <section ref={root} id="top" className="relative h-svh min-h-[720px] overflow-hidden">
+    <section ref={root} id="top" className="relative h-svh min-h-[620px] overflow-hidden md:min-h-[720px]">
       <h1
         data-hero-title
-        className="absolute inset-x-5 top-24 flex justify-between font-display text-[27vw] leading-none font-black text-blood md:inset-x-12 md:top-[11vh] md:text-[26.4vw]"
+        className="absolute inset-x-5 top-[92px] z-10 flex justify-between font-display text-[27vw] leading-none font-black text-blood md:inset-x-12 md:top-[11vh] md:z-0 md:text-[26.4vw]"
       >
         <span data-slay>SLAY</span>
         <span data-ctf className="text-bone">
@@ -65,7 +65,7 @@ export function Hero() {
       <Arena dive className="absolute inset-0" />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-b from-transparent to-void to-55% md:h-2/5 md:to-70%"
+        className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-2/5 bg-gradient-to-b from-transparent to-void to-70% md:block"
       />
       <p
         data-hero-line
@@ -77,20 +77,22 @@ export function Hero() {
       </p>
       <div
         data-hero-copy
-        className="absolute inset-x-5 bottom-20 flex flex-col gap-6 md:inset-x-12 md:bottom-[84px] md:flex-row md:items-end md:justify-between"
+        className="absolute inset-x-5 bottom-[60px] z-[1] flex flex-col gap-3 before:pointer-events-none before:absolute before:-inset-x-5 before:-top-14 before:-bottom-[60px] before:-z-10 before:bg-gradient-to-b before:from-transparent before:to-void before:to-[72px] md:inset-x-12 md:before:hidden md:bottom-[84px] md:flex-row md:items-end md:justify-between md:gap-6"
       >
-        <div className="flex flex-col items-start gap-4">
-          <p className="font-mono text-sm text-ember">
+        <div className="contents md:flex md:flex-col md:items-start md:gap-4">
+          <p className="font-mono text-xs text-ember md:text-sm">
             {"// "}
             {event.level.toUpperCase()} · {event.mode.toUpperCase()} {event.format.toUpperCase()}
           </p>
           <p className="max-w-[540px] text-sm leading-relaxed md:text-base">
-            Annual 3-hour online jeopardy cybersecurity tournament. Teams enter the arena, one holds the core. Organized by {event.organizer}, {event.hostShort}.
+            Annual 3-hour online jeopardy cybersecurity tournament.{" "}
+            <span className="hidden md:inline">Teams enter the arena, one holds the core. </span>
+            Organized by {event.organizer}, {event.hostShort}.
           </p>
-          <Magnetic>
+          <Magnetic className="order-last block md:order-none md:inline-block">
             <a
               href={event.registerUrl}
-              className="flex h-14 items-center bg-blood px-9 font-mono text-base font-bold text-white hover:bg-ember md:h-[60px]"
+              className="flex h-14 items-center justify-center bg-blood px-9 font-mono text-base font-bold text-white hover:bg-ember md:h-[60px]"
             >
               ENTER THE ARENA -&gt;
             </a>
@@ -101,7 +103,7 @@ export function Hero() {
           <Countdown />
         </div>
       </div>
-      <div className="absolute inset-x-0 bottom-0 flex h-[52px] items-center overflow-hidden bg-blood font-mono text-sm font-bold whitespace-nowrap text-white">
+      <div className="absolute inset-x-0 bottom-0 z-[2] flex h-11 items-center overflow-hidden bg-blood font-mono text-xs font-bold md:h-[52px] md:text-sm whitespace-nowrap text-white">
         <div className="flex shrink-0 animate-marquee gap-12 pl-12">
           {[0, 1, 2, 3, 4, 5, 6, 7].flatMap((copy) =>
             TICKER.flatMap((item) => [

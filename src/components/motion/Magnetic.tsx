@@ -4,7 +4,7 @@ import { useEffect, useRef, type ReactNode } from "react";
 import { gsap } from "gsap";
 
 // Pulls its child toward the pointer while the pointer is nearby.
-export function Magnetic({ children }: { children: ReactNode }) {
+export function Magnetic({ children, className = "inline-block" }: { children: ReactNode; className?: string }) {
   const root = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export function Magnetic({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <span ref={root} className="inline-block">
+    <span ref={root} className={className}>
       {children}
     </span>
   );
