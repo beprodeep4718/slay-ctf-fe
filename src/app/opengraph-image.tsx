@@ -20,7 +20,7 @@ export default function Image() {
           color: "#F5EDEA",
         }}
       >
-        <div style={{ fontSize: 28, color: "#FF4B3E" }}>NATIONAL LEVEL · ON SITE BATTLEGROUND</div>
+        <div style={{ fontSize: 28, color: "#FF4B3E" }}>NATIONAL LEVEL · ONLINE JEOPARDY · 19 NOV 2026</div>
         <div style={{ fontSize: 210, fontWeight: 900, color: "#E10600" }}>SLAY CTF</div>
         <div style={{ fontSize: 34 }}>{event.host}</div>
       </div>

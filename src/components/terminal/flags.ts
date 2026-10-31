@@ -1,12 +1,12 @@
 // SHA-256 of each flag, so the answers are not in the bundle. This is a game, not security.
 export const FLAG_HASHES = [
-  "dd0e25ef43726a1db7ab6a18bca76a528a97745ab2915ee917a18a16f08b1a42",
-  "cb91cb8dbe05bde4ba03c1129f198b04fd98f10a252ceecc3a98f8cb7412a5f9",
-  "c09d8a5e2401067341cc87c58c56a028d0eaa44a96e08cfefa42c1ecbb4689d6",
+  "ae053338e9828ea5e464348f76125903726aad21ca61dcf1161f1127d1d45566",
+  "043181f7734badb728a20ff656574c27879d089a5450d54a01e77080945f299f",
+  "ad86e6f96d8efaf5f0e1b4cf002f4369cbaf9889e3bc18b2ce713569bf178097",
 ];
 
-export const CONSOLE_CLUE = "736c61797b636f6e736f6c655f636f77626f797d";
-export const SCAN_CLUE = "fynl{pber_pbagrfgrq}";
+export const CONSOLE_CLUE = "534c41597b636f6e736f6c655f636f77626f797d";
+export const SCAN_CLUE = "FYNL{pber_pbagrfgrq}";
 
 const OPEN_EVENT = "slay:terminal";
 

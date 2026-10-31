@@ -10,7 +10,7 @@ import { story } from "@/components/fx/story";
 import { useScrollScene, type Layout } from "@/components/fx/useScrollScene";
 import { Countdown } from "./Countdown";
 
-const TICKER = [event.dateLabel, event.prizePool, event.teamSize, event.location.toUpperCase()];
+const TICKER = [event.dateLabel, `${event.duration} sprint`.toUpperCase(), `${event.format} ${event.mode}`.toUpperCase(), `TEAMS: ${event.teamSize}`.toUpperCase(), `FLAG: ${event.flagFormat}`];
 
 // Scrolling drives the camera at the core while the title splits around it.
 function buildHero(root: HTMLElement, { wide }: Layout) {
@@ -82,10 +82,10 @@ export function Hero() {
         <div className="flex flex-col items-start gap-4">
           <p className="font-mono text-sm text-ember">
             {"// "}
-            {event.level.toUpperCase()} · {event.mode.toUpperCase()} BATTLEGROUND
+            {event.level.toUpperCase()} · {event.mode.toUpperCase()} {event.format.toUpperCase()}
           </p>
           <p className="max-w-[540px] text-sm leading-relaxed md:text-base">
-            Teams enter the arena. One holds the core. Hosted at {event.host}.
+            Annual 3-hour online jeopardy cybersecurity tournament. Teams enter the arena, one holds the core. Organized by {event.organizer}, {event.hostShort}.
           </p>
           <Magnetic>
             <a

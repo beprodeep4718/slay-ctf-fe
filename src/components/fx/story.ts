@@ -8,7 +8,7 @@ export const CHAPTERS = [
   { id: "tracks", label: "Loadout" },
   { id: "timeline", label: "Battle plan" },
   { id: "prizes", label: "Spoils" },
-  { id: "venue", label: "Drop zone" },
+  { id: "intel", label: "Field intel" },
   { id: "rules", label: "Rules" },
   { id: "register", label: "Final strike" },
 ];

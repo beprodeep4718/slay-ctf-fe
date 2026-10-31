@@ -59,22 +59,29 @@ export function Tracks() {
                 }}
                 onMouseEnter={() => setActive(i)}
                 onFocus={() => setActive(i)}
-                className={`flex h-16 w-full items-center gap-6 border-b border-line px-6 text-left md:h-[72px] ${
+                className={`flex h-16 w-full items-center gap-4 border-b border-line px-4 text-left md:h-[72px] md:gap-6 md:px-6 ${
                   on ? "bg-blood text-white" : ""
                 }`}
               >
-                <span className="font-mono text-sm">SLOT {i + 1}</span>
-                <span className="font-display text-4xl font-black uppercase md:text-[52px]">{track.name}</span>
-                {armed && <span className="ml-auto font-mono text-sm">ARMED</span>}
+                <span className="hidden font-mono text-sm sm:inline">SLOT {i + 1}</span>
+                <span className="font-display text-3xl font-black uppercase md:text-[52px]">{track.name}</span>
+                {armed && <span className="ml-auto font-mono text-xs md:text-sm">ARMED</span>}
               </button>
             );
           })}
         </div>
         <div className="order-first text-center lg:order-none">
-          <Weapon shape={active} className="mx-auto aspect-square w-full max-w-[240px] lg:max-w-[min(420px,52vh)]" />
+          <Weapon shape={active} className="mx-auto aspect-square w-full max-w-[240px] lg:max-w-[min(380px,46vh)]" />
           <p aria-live="polite" className="font-mono text-ember">
             <ScrambleText text={event.tracks[active].blurb} />
           </p>
+          <ul className="mt-3 flex flex-wrap justify-center gap-2 font-mono text-xs text-smoke">
+            {event.tracks[active].tools.map((tool) => (
+              <li key={tool} className="border border-line px-2 py-1">
+                {tool}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

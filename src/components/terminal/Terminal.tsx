@@ -93,8 +93,8 @@ export function Terminal() {
     let out: string[];
     if (!command) out = [];
     else if (lower === "help") out = HELP;
-    else if (lower === "about") out = [`${event.name}: ${event.level.toLowerCase()}, ${event.mode.toLowerCase()} at`, `${event.host}.`];
-    else if (lower === "rules") out = [`Team size: ${event.teamSize}`, `Eligibility: ${event.eligibility}`, `Entry fee: ${event.entryFee}`];
+    else if (lower === "about") out = [`${event.name} ${event.edition}: ${event.duration}, ${event.mode.toLowerCase()} ${event.format.toLowerCase()}.`, `Organized by ${event.organizer}, ${event.hostShort}.`, `Starts ${event.dateLabel}.`];
+    else if (lower === "rules") out = event.rules.map((rule) => rule.text);
     else if (lower === "register") {
       window.location.href = event.registerUrl;
       setOpen(false);

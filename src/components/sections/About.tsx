@@ -8,13 +8,13 @@ import { useScrollScene, type Layout } from "@/components/fx/useScrollScene";
 import { Heading } from "./Section";
 
 const STATS = [
-  { label: "LEVEL", value: event.level },
-  { label: "MODE", value: event.mode },
+  { label: "FORMAT", value: event.format },
+  { label: "DURATION", value: event.duration },
   { label: "TEAMS", value: event.teamSize },
-  { label: "DATE", value: event.dateLabel },
+  { label: "START", value: "19 Nov 2026" },
 ];
 
-const BRIEFING = `${event.name} is a national level Capture The Flag competition held on site at ${event.host}. Teams from across the country fight through security challenges in one room, for one title.`;
+const BRIEFING = `${event.name} ${event.edition} is an annual 3-hour online jeopardy cybersecurity tournament, organized by ${event.organizer}, ${event.organizerRole}. Squads of 1 to 3 race through real offensive security challenges, and the scoreboard swings live.`;
 
 // The briefing lights up word by word, then the mission facts lock in.
 function buildAbout(root: HTMLElement, { wide }: Layout) {

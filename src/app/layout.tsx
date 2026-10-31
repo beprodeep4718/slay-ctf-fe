@@ -16,9 +16,9 @@ const jetbrains = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: `${event.name} | National Level Capture The Flag`,
-  description: `${event.name} is a national level, on-site Capture The Flag competition at ${event.host}.`,
+  description: `${event.name} ${event.edition} is a 3-hour online jeopardy cybersecurity tournament by ${event.organizer}, ${event.organizerRole}.`,
   // First flag of the hunt: this value is base64.
-  other: { "arena-signal": "c2xheXt2aWV3X3NvdXJjZV9oYXVudHN9" },
+  other: { "arena-signal": "U0xBWXt2aWV3X3NvdXJjZV9oYXVudHN9" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
